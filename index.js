@@ -33,6 +33,7 @@ async function run() {
     try {
         await client.connect();
         const usersCollection = client.db('Ed-Tech').collection('users');
+        const courseCollection = client.db('Ed-Tech').collection('courses');
 
         // update users
         app.put('/user/:email', async (req, res) => {
@@ -47,6 +48,12 @@ async function run() {
             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
             res.send({ result, token });
         });
+
+        // get course
+        app.get('/courses', async (req, res) => {
+            const courses = await courseCollection.find().toArray();
+            res.send(courses);
+        })
     }
     finally { }
 }
