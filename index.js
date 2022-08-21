@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+// const stripe = require("stripe")('sk_test_51L1X0aJ4uo6umqFGlX4zF8WfRrJoNPFilrmroV5SP8WZ6r4scj2JQXaRooHcdaClMnQS1G0BBNFEVs03i0XDVB9b00lZesQk98');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -53,6 +54,14 @@ async function run() {
         app.get('/courses', async (req, res) => {
             const courses = await courseCollection.find().toArray();
             res.send(courses);
+        });
+
+        // get course by id
+        app.get('/course/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const course = await courseCollection.findOne(query);
+            res.send(course);
         })
     }
     finally { }
